@@ -67,7 +67,7 @@ public class BasicObservable {
         System.out.println("------------------------------------------------------------");
 
         /**
-         * Shorter version:s
+         * Shorter versions:
          */
         Observable<String> myFirstShorterObservable = Observable.just("Hello, world!");
 
