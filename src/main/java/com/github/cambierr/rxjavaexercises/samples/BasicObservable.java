@@ -81,7 +81,7 @@ public class BasicObservable {
             }
         };
 
-        myFirstShorterObservable.subscribe(onNextAction);
+        Observable.just("Hello, world!").subscribe(onNextAction);
 
     }
 

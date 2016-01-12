@@ -37,9 +37,9 @@ public class TP {
     public static void main(String[] args) {
         /**
          * 1) get per-user total expenses (only for the 1.000 first)
-         * 2) list who bought product-145
+         * 2) list who bought product-145 (and give total amount per user)
          * 3) do it again and tell how many for each user
-         * 4) how much money has been spent between t1: 1452092879618 and t2: 1452092879625 ?
+         * 4) how much money has been spent between t1: 1452092879618 and t2: 1452092879625, per user
          * 
          * hint: Database contains all database-access tools
          */
