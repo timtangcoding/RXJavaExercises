@@ -23,7 +23,15 @@
  */
 package com.github.cambierr.rxjavaexercises.diy;
 
+import com.github.cambierr.rxjavaexercises.samples.extra.AsyncDatabase;
 import com.github.cambierr.rxjavaexercises.samples.extra.Database;
+import com.github.cambierr.rxjavaexercises.samples.extra.Database.Order;
+import com.github.cambierr.rxjavaexercises.samples.extra.Database.Product;
+import com.github.cambierr.rxjavaexercises.samples.extra.Database.User;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.Set;
 
 /**
  *
@@ -39,14 +47,13 @@ public class TP {
          * 1) get per-user total expenses (only for the 1.000 first)
          * 2) list who bought product-145 (and give total amount per user)
          * 3) do it again and tell how many for each user
-         * 4) how much money has been spent between t1: 1452092879618 and t2: 1452092879625, per user
-         * 
-         * hint: Database contains all database-access tools
+         * 4) how much money has been spent between t1: 1452960065936 and t2: 1452960065969, per user
+         *
+         * hint: Database & AsyncDatabase contains all database-access tools
          */
         final Database db = new Database();
-        
-        
-        
+        final AsyncDatabase adb = new AsyncDatabase();
+        final long startTime = System.currentTimeMillis();
         
         
         

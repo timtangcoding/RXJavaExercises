@@ -191,7 +191,14 @@ public class PopulateDatabase {
                                         arg0.content().getArray("orders").add(order.id());
                                     }
                                 })
-                                .last();
+                                .last()
+                                .map(new Func1<JsonDocument, JsonDocument>() {
+
+                                    @Override
+                                    public JsonDocument call(JsonDocument arg0) {
+                                        return order;
+                                    }
+                                });
                             }
                         })
                         .doOnNext(new Action1<JsonDocument>() {
@@ -255,10 +262,10 @@ public class PopulateDatabase {
 
                     @Override
                     public void onNext(JsonDocument t) {
-                        
+
                     }
                 });
-        
+
         cdl3.await();
 
         System.out.println("over");
