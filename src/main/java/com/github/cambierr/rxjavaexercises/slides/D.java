@@ -21,43 +21,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.github.cambierr.rxjavaexercises.diy;
+package com.github.cambierr.rxjavaexercises.slides;
 
-import com.github.cambierr.rxjavaexercises.samples.extra.AsyncDatabase;
-import com.github.cambierr.rxjavaexercises.samples.extra.Database;
-import com.github.cambierr.rxjavaexercises.samples.extra.Database.Order;
-import com.github.cambierr.rxjavaexercises.samples.extra.Database.Product;
-import com.github.cambierr.rxjavaexercises.samples.extra.Database.User;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.Set;
+import rx.Observable;
+import rx.schedulers.Schedulers;
 
 /**
  *
  * @author cambierr
  */
-public class TP {
+public class D {
 
-    /**
-     * @param args the command line arguments
-     */
     public static void main(String[] args) {
+
+        final Observable<Integer> myObservable = Observable.empty();
+
         /**
-         * 1) get per-user total expenses (only for the 1.000 first)
-         * 2) list who bought product-145 (and give total amount per user)
-         * 3) do it again and tell how many for each user
-         * 4) how much money has been spent between t1: 1452960065936 and t2: 1452960065969, per user
-         *
-         * hint: Database & AsyncDatabase contains all database-access tools
+         * This Operator requires the source Observable to act on a different thread pool (multi-threading!)
          */
-        final Database db = new Database();
-        final AsyncDatabase adb = new AsyncDatabase();
-        final long startTime = System.currentTimeMillis();
-        
-        
-        
-        
+        myObservable.subscribeOn(Schedulers.io());
+
+        /**
+         * This Operator requires the Observable sequence to act on a different thread pool from the point it's called
+         */
+        myObservable.observeOn(Schedulers.io());
 
     }
 

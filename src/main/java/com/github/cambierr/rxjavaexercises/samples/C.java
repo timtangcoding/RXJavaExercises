@@ -31,7 +31,7 @@ import rx.functions.Func1;
  *
  * @author cambierr
  */
-public class ErrorHandling {
+public class C {
 
     public static void main(String[] args) {
         /**

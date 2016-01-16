@@ -25,27 +25,67 @@ package com.github.cambierr.rxjavaexercises.samples;
 
 import com.github.cambierr.rxjavaexercises.samples.extra.OSMCities;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
 import rx.Observable;
-import rx.Subscriber;
+import rx.functions.Action1;
 import rx.functions.Func1;
-import rx.functions.Func2;
-import rx.schedulers.Schedulers;
 
 /**
  *
  * @author cambierr
  */
-public class Reducers {
+public class D {
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
+
         /**
-         * Sum all cities population
+         * OSMCities.getCitiesAsList("Mons") return an Observable that will emit a list of cities matching your request
          */
-        final long start = System.currentTimeMillis();
         new OSMCities()
                 .getCitiesAsList("Mons")
-                .flatMap(new Func1<List<OSMCities.OSMCity>, Observable<OSMCities.OSMCity>>() {
+                .subscribe(new Action1<List<OSMCities.OSMCity>>() {
+
+                    @Override
+                    public void call(List<OSMCities.OSMCity> arg0) {
+                        for (OSMCities.OSMCity city : arg0) {
+                            System.out.println(city.getName());
+                        }
+                    }
+                });
+        System.out.println("------------------------------------------------------------");
+
+        /**
+         * Remember about not doing any work in the subscriber ?
+         */
+        new OSMCities()
+                .getCitiesAsList("Mons")
+                .flatMap(new Func1<List<OSMCities.OSMCity>, Observable<OSMCities.OSMCity>>() { //flatMap power ! flatMap can return 0 to n elements, or errors
+
+                    @Override
+                    public Observable<OSMCities.OSMCity> call(List<OSMCities.OSMCity> arg0) {
+                        return Observable.from(arg0);
+                    }
+                })
+                .map(new Func1<OSMCities.OSMCity, String>() {
+
+                    @Override
+                    public String call(OSMCities.OSMCity arg0) {
+                        return arg0.getName();
+                    }
+                })
+                .subscribe(new Action1<String>() {
+
+                    @Override
+                    public void call(String arg0) {
+                        System.out.println(arg0);
+                    }
+                });
+        System.out.println("------------------------------------------------------------");
+        /**
+         * flatMap, again
+         */
+        new OSMCities()
+                .getCitiesAsList("Mons")
+                .flatMap(new Func1<List<OSMCities.OSMCity>, Observable<OSMCities.OSMCity>>() { //flatMap power ! flatMap can return 0 to n elements, or errors
 
                     @Override
                     public Observable<OSMCities.OSMCity> call(List<OSMCities.OSMCity> arg0) {
@@ -59,34 +99,27 @@ public class Reducers {
                         return arg0.getPopulation();
                     }
                 })
-                .subscribe(new Subscriber<Integer>() {
-
-                    int sum = 0;
+                .map(new Func1<Integer, String>() {
 
                     @Override
-                    public void onCompleted() {
-                        System.out.println(sum);
+                    public String call(Integer arg0) {
+                        return arg0.toString();
                     }
+                })
+                .subscribe(new Action1<String>() {
 
                     @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onNext(Integer t) {
-                        sum += t;
+                    public void call(String arg0) {
+                        System.out.println(arg0);
                     }
                 });
-        System.out.println("1st sum of cities population took " + (System.currentTimeMillis() - start) + " ms");
         System.out.println("------------------------------------------------------------");
         /**
-         * Sum all cities population...without doing work in the subscriber !!!
+         * what if I only want big cities ?
          */
-        final long start1 = System.currentTimeMillis();
         new OSMCities()
                 .getCitiesAsList("Mons")
-                .flatMap(new Func1<List<OSMCities.OSMCity>, Observable<OSMCities.OSMCity>>() {
+                .flatMap(new Func1<List<OSMCities.OSMCity>, Observable<OSMCities.OSMCity>>() { //flatMap power ! flatMap can return 0 to n elements, or errors
 
                     @Override
                     public Observable<OSMCities.OSMCity> call(List<OSMCities.OSMCity> arg0) {
@@ -100,11 +133,11 @@ public class Reducers {
                         return arg0.getPopulation();
                     }
                 })
-                .reduce(new Func2<Integer, Integer, Integer>() {
+                .filter(new Func1<Integer, Boolean>() {
 
                     @Override
-                    public Integer call(Integer arg0, Integer arg1) {
-                        return arg0 + arg1;
+                    public Boolean call(Integer arg0) {
+                        return arg0 > 5000;
                     }
                 })
                 .map(new Func1<Integer, String>() {
@@ -114,32 +147,20 @@ public class Reducers {
                         return arg0.toString();
                     }
                 })
-                .subscribe(new Subscriber<String>() {
+                .subscribe(new Action1<String>() {
 
                     @Override
-                    public void onCompleted() {
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onNext(String t) {
-                        System.out.println(t);
+                    public void call(String arg0) {
+                        System.out.println(arg0);
                     }
                 });
-        System.out.println("2nd sum of cities population took " + (System.currentTimeMillis() - start1) + " ms");
         System.out.println("------------------------------------------------------------");
         /**
-         * Sum all cities population...without doing work in the subscriber, but faster..
+         * what if I only want big cities ?, but only first two ?
          */
-        final long start2 = System.currentTimeMillis();
-        final CountDownLatch cdl = new CountDownLatch(1);
         new OSMCities()
                 .getCitiesAsList("Mons")
-                .flatMap(new Func1<List<OSMCities.OSMCity>, Observable<OSMCities.OSMCity>>() {
+                .flatMap(new Func1<List<OSMCities.OSMCity>, Observable<OSMCities.OSMCity>>() { //flatMap power ! flatMap can return 0 to n elements, or errors
 
                     @Override
                     public Observable<OSMCities.OSMCity> call(List<OSMCities.OSMCity> arg0) {
@@ -150,16 +171,17 @@ public class Reducers {
 
                     @Override
                     public Observable<Integer> call(OSMCities.OSMCity arg0) {
-                        return arg0.getPopulation().subscribeOn(Schedulers.io());
+                        return arg0.getPopulation();
                     }
                 })
-                .reduce(new Func2<Integer, Integer, Integer>() {
+                .filter(new Func1<Integer, Boolean>() {
 
                     @Override
-                    public Integer call(Integer arg0, Integer arg1) {
-                        return arg0 + arg1;
+                    public Boolean call(Integer arg0) {
+                        return arg0 > 5000;
                     }
                 })
+                .take(2)
                 .map(new Func1<Integer, String>() {
 
                     @Override
@@ -167,25 +189,14 @@ public class Reducers {
                         return arg0.toString();
                     }
                 })
-                .subscribe(new Subscriber<String>() {
+                .subscribe(new Action1<String>() {
 
                     @Override
-                    public void onCompleted() {
-                        cdl.countDown();
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-
-                    }
-
-                    @Override
-                    public void onNext(String t) {
-                        System.out.println(t);
+                    public void call(String arg0) {
+                        System.out.println(arg0);
                     }
                 });
-        cdl.await();
-        System.out.println("3rd sum of cities population took " + (System.currentTimeMillis() - start2) + " ms");
+
     }
 
 }

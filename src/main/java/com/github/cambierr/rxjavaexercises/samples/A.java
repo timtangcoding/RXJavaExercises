@@ -31,7 +31,7 @@ import rx.functions.Action1;
  *
  * @author cambierr
  */
-public class BasicObservable {
+public class A {
 
     public static void main(String[] args) {
 

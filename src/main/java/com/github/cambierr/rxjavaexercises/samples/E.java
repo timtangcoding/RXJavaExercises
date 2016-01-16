@@ -35,7 +35,7 @@ import rx.schedulers.Schedulers;
  *
  * @author cambierr
  */
-public class BasicScheduler {
+public class E {
 
     /**
      * @param args the command line arguments

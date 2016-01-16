@@ -31,7 +31,7 @@ import rx.functions.Func1;
  *
  * @author cambierr
  */
-public class BasicTransformation {
+public class B {
 
     public static void main(String[] args) {
 

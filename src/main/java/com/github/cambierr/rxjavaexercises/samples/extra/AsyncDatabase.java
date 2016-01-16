@@ -30,33 +30,30 @@ import com.couchbase.client.java.document.JsonDocument;
 import com.couchbase.client.java.view.AsyncViewResult;
 import com.couchbase.client.java.view.AsyncViewRow;
 import com.couchbase.client.java.view.ViewQuery;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.github.cambierr.rxjavaexercises.samples.extra.Database.Order;
+import com.github.cambierr.rxjavaexercises.samples.extra.Database.Product;
+import com.github.cambierr.rxjavaexercises.samples.extra.Database.User;
 import java.util.concurrent.TimeUnit;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import rx.Observable;
 import rx.Subscriber;
 import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 /**
  *
  * @author cambierr
  */
-public class Database {
+public class AsyncDatabase {
 
     private static final Cluster cluster;
     private static final AsyncBucket bucket;
-    protected static final int LATENCY = 1;
 
     static {
         cluster = CouchbaseCluster.create("127.0.0.1");
         bucket = cluster.openBucket().async();
     }
 
-    public User userById(String _id) {
+    public Observable<User> userById(String _id) {
         return simulateLatency(bucket.get(_id))
                 .filter(new Func1<JsonDocument, Boolean>() {
 
@@ -71,13 +68,12 @@ public class Database {
                     public User call(JsonDocument arg0) {
                         return new User(arg0);
                     }
-                })
-                .toBlocking()
-                .singleOrDefault(null);
+                });
     }
 
-    public List<User> listUsers() {
-        return bucket.query(ViewQuery.from("all", "user"))
+    public Observable<User> listUsers() {
+        return bucket
+                .query(ViewQuery.from("all", "user"))
                 .flatMap(new Func1<AsyncViewResult, Observable<AsyncViewRow>>() {
 
                     @Override
@@ -98,13 +94,10 @@ public class Database {
                     public User call(JsonDocument arg0) {
                         return new User(arg0);
                     }
-                })
-                .toList()
-                .toBlocking()
-                .single();
+                });
     }
 
-    public List<String> listUserIds() {
+    public Observable<String> listUserIds() {
         return bucket.query(ViewQuery.from("all", "user"))
                 .flatMap(new Func1<AsyncViewResult, Observable<AsyncViewRow>>() {
 
@@ -119,13 +112,10 @@ public class Database {
                     public String call(AsyncViewRow arg0) {
                         return arg0.id();
                     }
-                })
-                .toList()
-                .toBlocking()
-                .single();
+                });
     }
 
-    public User findUser(String _pseudo) {
+    public Observable<User> findUser(String _pseudo) {
         return bucket.query(ViewQuery.from("all", "user").key(_pseudo))
                 .flatMap(new Func1<AsyncViewResult, Observable<AsyncViewRow>>() {
 
@@ -147,12 +137,10 @@ public class Database {
                     public User call(JsonDocument arg0) {
                         return new User(arg0);
                     }
-                })
-                .toBlocking()
-                .singleOrDefault(null);
+                });
     }
 
-    public Product productById(String _id) {
+    public Observable<Product> productById(String _id) {
         return simulateLatency(bucket.get(_id))
                 .filter(new Func1<JsonDocument, Boolean>() {
 
@@ -167,12 +155,10 @@ public class Database {
                     public Product call(JsonDocument arg0) {
                         return new Product(arg0);
                     }
-                })
-                .toBlocking()
-                .singleOrDefault(null);
+                });
     }
 
-    public List<Product> listProducts() {
+    public Observable<Product> listProducts() {
         return bucket
                 .query(ViewQuery.from("all", "product"))
                 .flatMap(new Func1<AsyncViewResult, Observable<AsyncViewRow>>() {
@@ -195,13 +181,10 @@ public class Database {
                     public Product call(JsonDocument arg0) {
                         return new Product(arg0);
                     }
-                })
-                .toList()
-                .toBlocking()
-                .single();
+                });
     }
 
-    public List<String> listProductIds() {
+    public Observable<String> listProductIds() {
         return bucket.query(ViewQuery.from("all", "product"))
                 .flatMap(new Func1<AsyncViewResult, Observable<AsyncViewRow>>() {
 
@@ -216,13 +199,10 @@ public class Database {
                     public String call(AsyncViewRow arg0) {
                         return arg0.id();
                     }
-                })
-                .toList()
-                .toBlocking()
-                .single();
+                });
     }
 
-    public Product findProduct(String _name) {
+    public Observable<Product> findProduct(String _name) {
         return bucket.query(ViewQuery.from("all", "product").key(_name))
                 .flatMap(new Func1<AsyncViewResult, Observable<AsyncViewRow>>() {
 
@@ -244,12 +224,10 @@ public class Database {
                     public Product call(JsonDocument arg0) {
                         return new Product(arg0);
                     }
-                })
-                .toBlocking()
-                .singleOrDefault(null);
+                });
     }
 
-    public Order orderById(String _id) {
+    public Observable<Order> orderById(String _id) {
         return simulateLatency(bucket.get(_id))
                 .filter(new Func1<JsonDocument, Boolean>() {
 
@@ -264,12 +242,10 @@ public class Database {
                     public Order call(JsonDocument arg0) {
                         return new Order(arg0);
                     }
-                })
-                .toBlocking()
-                .singleOrDefault(null);
+                });
     }
 
-    public List<String> listOrderIds() {
+    public Observable<String> listOrderIds() {
         return bucket.query(ViewQuery.from("all", "order"))
                 .flatMap(new Func1<AsyncViewResult, Observable<AsyncViewRow>>() {
 
@@ -284,13 +260,10 @@ public class Database {
                     public String call(AsyncViewRow arg0) {
                         return arg0.id();
                     }
-                })
-                .toList()
-                .toBlocking()
-                .singleOrDefault(null);
+                });
     }
 
-    public List<Order> listOrders() {
+    public Observable<Order> listOrders() {
         return bucket.query(ViewQuery.from("all", "order"))
                 .flatMap(new Func1<AsyncViewResult, Observable<AsyncViewRow>>() {
 
@@ -312,13 +285,10 @@ public class Database {
                     public Order call(JsonDocument arg0) {
                         return new Order(arg0);
                     }
-                })
-                .toList()
-                .toBlocking()
-                .singleOrDefault(null);
+                });
     }
 
-    public List<Order> listOrdersBetween(long _t1, long _t2) {
+    public Observable<Order> listOrdersBetween(long _t1, long _t2) {
         return bucket.query(ViewQuery.from("all", "order").startKey(_t1).endKey(_t2))
                 .flatMap(new Func1<AsyncViewResult, Observable<AsyncViewRow>>() {
 
@@ -331,7 +301,7 @@ public class Database {
 
                     @Override
                     public Observable<JsonDocument> call(AsyncViewRow arg0) {
-                        return arg0.document();
+                        return simulateLatency(arg0.document());
                     }
                 })
                 .map(new Func1<JsonDocument, Order>() {
@@ -340,111 +310,11 @@ public class Database {
                     public Order call(JsonDocument arg0) {
                         return new Order(arg0);
                     }
-                })
-                .toList()
-                .toBlocking()
-                .single();
-    }
-
-    public static class User {
-
-        private final JsonDocument me;
-
-        public String getId() {
-            return me.id();
-        }
-
-        protected User(JsonDocument _data) {
-            me = _data;
-        }
-
-        public String getPseudo() {
-            return me.content().getString("pseudo");
-        }
-
-        public List<String> getOrderIds() {
-            final ArrayList al = new ArrayList();
-            me.content().getArray("orders").toList().forEach(new Consumer<Object>() {
-
-                @Override
-                public void accept(Object t) {
-                    al.add(t.toString());
-                }
-            });
-            return al;
-        }
-
-    }
-
-    public static class Order {
-
-        private final JsonDocument me;
-
-        public String getId() {
-            return me.id();
-        }
-
-        protected Order(JsonDocument _data) {
-            me = _data;
-        }
-
-        public long getTime() {
-            return me.content().getLong("time");
-        }
-
-        public String getUserId() {
-            return me.content().getString("user");
-        }
-
-        public Map<String, Integer> getOrderContent() {
-            final HashMap<String, Integer> al = new HashMap();
-            me.content().getObject("content").toMap().forEach(new BiConsumer<String, Object>() {
-                @Override
-                public void accept(String t, Object u) {
-                    al.put(t, (int) u);
-                }
-            });
-            return al;
-        }
-
-    }
-
-    public static class Product {
-
-        private final JsonDocument me;
-
-        public String getId() {
-            return me.id();
-        }
-
-        protected Product(JsonDocument _data) {
-            me = _data;
-        }
-
-        public String getName() {
-            return me.content().getString("name");
-        }
-
-        public double getPrice() {
-            return me.content().getDouble("price");
-        }
-
-        public List<String> getOrderIds() {
-            final ArrayList al = new ArrayList();
-            me.content().getArray("orders").toList().forEach(new Consumer<Object>() {
-
-                @Override
-                public void accept(Object t) {
-                    al.add(t.toString());
-                }
-            });
-            return al;
-        }
-
+                });
     }
 
     protected static Observable<JsonDocument> simulateLatency(Observable<JsonDocument> _input) {
-        return (LATENCY == 0) ? _input : _input
+        return (Database.LATENCY == 0) ? _input : _input
                 .flatMap(new Func1<JsonDocument, Observable<JsonDocument>>() {
                     @Override
                     public Observable<JsonDocument> call(final JsonDocument doc) {
@@ -454,15 +324,17 @@ public class Database {
                             @Override
                             public void call(Subscriber<? super JsonDocument> arg0) {
                                 try {
-                                    TimeUnit.MILLISECONDS.sleep(LATENCY);
+                                    TimeUnit.MILLISECONDS.sleep(Database.LATENCY);
                                     arg0.onNext(doc);
                                     arg0.onCompleted();
                                 } catch (InterruptedException ex) {
                                     arg0.onError(ex);
                                 }
                             }
-                        });
+                        })
+                        .subscribeOn(Schedulers.io());
                     }
                 });
     }
+
 }
