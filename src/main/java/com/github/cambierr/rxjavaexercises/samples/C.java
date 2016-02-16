@@ -46,7 +46,7 @@ public class C {
 
             @Override
             public void onCompleted() {
-                
+
             }
 
             @Override
@@ -56,118 +56,38 @@ public class C {
 
             @Override
             public void onNext(String t) {
-                
+
             }
         });
     }
 
     public static Observable<String> createRXError() {
-        return Observable
+        Observable<String> output = Observable
                 .create(new Observable.OnSubscribe<String>() {
 
                     @Override
                     public void call(Subscriber<? super String> arg0) {
                         arg0.onError(new Exception("find me"));
                     }
-                })
-                .map(new Func1<String, String>() {
-
-                    @Override
-                    public String call(String arg0) {
-                        return arg0;
-                    }
-                })
-                .flatMap(new Func1<String, Observable<String>>() {
-
-                    @Override
-                    public Observable<String> call(String arg0) {
-                        return Observable.just(arg0);
-                    }
-                })
-                .map(new Func1<String, String>() {
-
-                    @Override
-                    public String call(String arg0) {
-                        return arg0;
-                    }
-                })
-                .flatMap(new Func1<String, Observable<String>>() {
-
-                    @Override
-                    public Observable<String> call(String arg0) {
-                        return Observable.just(arg0);
-                    }
-                })
-                .map(new Func1<String, String>() {
-
-                    @Override
-                    public String call(String arg0) {
-                        return arg0;
-                    }
-                })
-                .flatMap(new Func1<String, Observable<String>>() {
-
-                    @Override
-                    public Observable<String> call(String arg0) {
-                        return Observable.just(arg0);
-                    }
-                })
-                .map(new Func1<String, String>() {
-
-                    @Override
-                    public String call(String arg0) {
-                        return arg0;
-                    }
-                })
-                .flatMap(new Func1<String, Observable<String>>() {
-
-                    @Override
-                    public Observable<String> call(String arg0) {
-                        return Observable.just(arg0);
-                    }
-                })
-                .map(new Func1<String, String>() {
-
-                    @Override
-                    public String call(String arg0) {
-                        return arg0;
-                    }
-                })
-                .flatMap(new Func1<String, Observable<String>>() {
-
-                    @Override
-                    public Observable<String> call(String arg0) {
-                        return Observable.just(arg0);
-                    }
-                })
-                .map(new Func1<String, String>() {
-
-                    @Override
-                    public String call(String arg0) {
-                        return arg0;
-                    }
-                })
-                .flatMap(new Func1<String, Observable<String>>() {
-
-                    @Override
-                    public Observable<String> call(String arg0) {
-                        return Observable.just(arg0);
-                    }
-                })
-                .map(new Func1<String, String>() {
-
-                    @Override
-                    public String call(String arg0) {
-                        return arg0;
-                    }
-                })
-                .flatMap(new Func1<String, Observable<String>>() {
-
-                    @Override
-                    public Observable<String> call(String arg0) {
-                        return Observable.just(arg0);
-                    }
                 });
+        for (int i = 0; i < 20; i++) {
+            output = output
+                    .map(new Func1<String, String>() {
+
+                        @Override
+                        public String call(String arg0) {
+                            return arg0;
+                        }
+                    })
+                    .flatMap(new Func1<String, Observable<String>>() {
+
+                        @Override
+                        public Observable<String> call(String arg0) {
+                            return Observable.just(arg0);
+                        }
+                    });
+        }
+        return output;
     }
 
 }
