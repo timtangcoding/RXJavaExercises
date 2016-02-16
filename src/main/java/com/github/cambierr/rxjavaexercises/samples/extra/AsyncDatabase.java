@@ -35,9 +35,7 @@ import com.github.cambierr.rxjavaexercises.samples.extra.Database.Product;
 import com.github.cambierr.rxjavaexercises.samples.extra.Database.User;
 import java.util.concurrent.TimeUnit;
 import rx.Observable;
-import rx.Subscriber;
 import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 
 /**
  *
@@ -314,27 +312,7 @@ public class AsyncDatabase {
     }
 
     protected static Observable<JsonDocument> simulateLatency(Observable<JsonDocument> _input) {
-        return (Database.LATENCY == 0) ? _input : _input
-                .flatMap(new Func1<JsonDocument, Observable<JsonDocument>>() {
-                    @Override
-                    public Observable<JsonDocument> call(final JsonDocument doc) {
-                        return Observable
-                        .create(new Observable.OnSubscribe<JsonDocument>() {
-
-                            @Override
-                            public void call(Subscriber<? super JsonDocument> arg0) {
-                                try {
-                                    TimeUnit.MILLISECONDS.sleep(Database.LATENCY);
-                                    arg0.onNext(doc);
-                                    arg0.onCompleted();
-                                } catch (InterruptedException ex) {
-                                    arg0.onError(ex);
-                                }
-                            }
-                        })
-                        .subscribeOn(Schedulers.io());
-                    }
-                });
+        return (Database.LATENCY == 0) ? _input : _input.delay(Database.LATENCY, TimeUnit.MILLISECONDS);
     }
 
 }

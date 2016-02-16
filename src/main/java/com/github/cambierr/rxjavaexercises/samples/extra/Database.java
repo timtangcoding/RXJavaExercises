@@ -444,25 +444,6 @@ public class Database {
     }
 
     protected static Observable<JsonDocument> simulateLatency(Observable<JsonDocument> _input) {
-        return (LATENCY == 0) ? _input : _input
-                .flatMap(new Func1<JsonDocument, Observable<JsonDocument>>() {
-                    @Override
-                    public Observable<JsonDocument> call(final JsonDocument doc) {
-                        return Observable
-                        .create(new Observable.OnSubscribe<JsonDocument>() {
-
-                            @Override
-                            public void call(Subscriber<? super JsonDocument> arg0) {
-                                try {
-                                    TimeUnit.MILLISECONDS.sleep(LATENCY);
-                                    arg0.onNext(doc);
-                                    arg0.onCompleted();
-                                } catch (InterruptedException ex) {
-                                    arg0.onError(ex);
-                                }
-                            }
-                        });
-                    }
-                });
+        return (LATENCY == 0) ? _input : _input.delay(LATENCY, TimeUnit.MILLISECONDS);
     }
 }
