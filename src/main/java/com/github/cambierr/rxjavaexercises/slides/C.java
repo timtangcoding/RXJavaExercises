@@ -47,6 +47,7 @@ public class C {
 
             @Override
             public void call(Subscriber<? super Integer> arg0) {
+                arg0.onStart();
                 for (int i = 0; i <= 10; i++) {
                     arg0.onNext(i);
                 }
@@ -61,6 +62,7 @@ public class C {
 
             @Override
             public void call(Subscriber<? super String> arg0) {
+                arg0.onStart();
                 try {
                     URLConnection link = new URL("http://api.icndb.com/jokes/random/3").openConnection();
                     link.setDoOutput(true);

@@ -686,6 +686,7 @@ public class Basics {
 
                 @Override
                 public void call(Subscriber<? super Integer> t) {
+                    t.onStart();
                     try {
                         TimeUnit.SECONDS.sleep(1);
 
@@ -751,6 +752,7 @@ public class Basics {
 
                 @Override
                 public void call(Subscriber<? super String> t) {
+                    t.onStart();
                     for (String l11 : l1) {
                         t.onNext(l11);
                     }
@@ -772,6 +774,7 @@ public class Basics {
 
                 @Override
                 public void call(Subscriber<? super String> t) {
+                    t.onStart();
                     boolean shouldCrash = (Math.random() > 0.5);
                     for (String l11 : l1) {
                         t.onNext(l11);

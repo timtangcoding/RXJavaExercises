@@ -67,6 +67,7 @@ public class C {
 
                     @Override
                     public void call(Subscriber<? super String> arg0) {
+                        arg0.onStart();
                         arg0.onError(new Exception("find me"));
                     }
                 });

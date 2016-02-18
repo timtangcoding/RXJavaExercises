@@ -40,6 +40,7 @@ public class A {
 
                     @Override
                     public void call(Subscriber<? super String> arg0) {
+                        arg0.onStart();
                         arg0.onNext("Hello, world!");
                         arg0.onCompleted();
                     }

@@ -45,6 +45,7 @@ public class OSMCities {
             @Override
             public void call(Subscriber<? super OSMCity> arg0) {
                 try {
+                    arg0.onStart();
                     JsonNode json = Unirest
                             .get("https://nominatim.openstreetmap.org/search.php?format=json&q=" + _search)
                             .asJson()
@@ -93,6 +94,7 @@ public class OSMCities {
 
                 @Override
                 public void call(Subscriber<? super Integer> arg0) {
+                    arg0.onStart();
                     try {
                         TimeUnit.SECONDS.sleep(1);
                         arg0.onNext(Math.abs(getName().hashCode() % 10000));
